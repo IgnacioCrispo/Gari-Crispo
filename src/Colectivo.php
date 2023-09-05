@@ -18,6 +18,11 @@ class Colectivo{
             $tarjeta->descargarSaldo($this->tarifa);
             return true;
         }
+        elseif(($tajeta->obtenerSaldo() - $tarifa) > 211.84 && $tarjeta->obtenerPlus() > 0) {
+            $tarjeta->descargarSaldo($this->tarifa);
+            $tajeta->descontarPlus();
+            return true;
+        }
         return false;
     }
 
