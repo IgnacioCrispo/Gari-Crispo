@@ -30,7 +30,7 @@ class Colectivo{
         return $this->tarifa;
     }
 
-    public function obtenerLinea() {
+    public function getLinea() {
         return $this->linea;
     }
 }
