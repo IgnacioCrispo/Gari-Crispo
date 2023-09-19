@@ -4,6 +4,7 @@ namespace TrabajoSube;
 require_once 'Tarjeta.php';
 
 use TrabajoSube\Tarjeta;
+use TrabajoSube\Boleto;
 
 class Colectivo{
     private $tarifa = 120;
@@ -16,11 +17,15 @@ class Colectivo{
     public function pagarTarifa($tarjeta) {
         if($tarjeta->obtenerSaldo() >= $this->tarifa) {
             $tarjeta->descargarSaldo($this->tarifa);
+            $boleto = new Boleto($tarjeta,$linea,$tarifa);
+            $boleto->imprimirBoleto();
             return true;
         }
         elseif(($tajeta->obtenerSaldo() - $tarifa) >= 211.84 && $tarjeta->obtenerPlus() > 0) {
             $tarjeta->descargarSaldo($this->tarifa);
             $tajeta->descontarPlus();
+            $boleto = new Boleto($tarjeta,$linea,$tarifa);
+            $boleto->imprimirBoleto();
             return true;
         }
         return false;

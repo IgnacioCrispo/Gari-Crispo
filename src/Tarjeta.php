@@ -3,9 +3,11 @@ namespace TrabajoSube;
 class Tarjeta{
     private $saldo;
     private $plus = 2;
+    private $ID;
 
-    public function __construct($saldoInicial = 0) {
+    public function __construct($saldoInicial = 0, $IDTarjeta = 0) {
         $this->saldo = $saldoInicial;
+        $this->ID = $IDTarjeta;
     }
 
     public function cargarSaldo($agregar) {
@@ -33,6 +35,10 @@ class Tarjeta{
 
     public function obtenerVPlus() {
         return $this->plus;
+    }
+
+    public function obtenerID() {
+        return $this->ID;
     }
 
 }
