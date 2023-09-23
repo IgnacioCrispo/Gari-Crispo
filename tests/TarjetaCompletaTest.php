@@ -8,7 +8,7 @@ class TarjetaCompletaTest extends TestCase {
     public function testPagarBoleto() {
         // Crea una TarjetaCompleta con saldo inicial de 1000
         $tarjeta = new TarjetaCompleta(1000);
-        $colectivo = new Colectivo(115);
+        $colectivo = new Colectivo(115,$tarjeta);
 
         // Intenta pagar un boleto de 50
         $pagoExitoso = $colectivo->pagarTarifa($tarjeta);
@@ -25,14 +25,14 @@ class TarjetaCompletaTest extends TestCase {
         $tarjeta = new TarjetaCompleta(0, 12345);
     
         // Hacer dos viajes gratuitos en el mismo día
-        $colectivo = new Colectivo("115");
+        $colectivo = new Colectivo(115,$tarjeta);
         $boleto1 = $colectivo->pagarTarifa($tarjeta);
     
-        $colectivo = new Colectivo("116");
+        $colectivo = new Colectivo(116,$tarjeta);
         $boleto2 = $colectivo->pagarTarifa($tarjeta);
     
         // Intentar hacer un tercer viaje gratuito
-        $colectivo = new Colectivo("117");
+        $colectivo = new Colectivo(117,$tarjeta);
         $boleto3 = $colectivo->pagarTarifa($tarjeta);
     
         // Verificar que los primeros dos viajes son gratuitos
@@ -48,14 +48,14 @@ class TarjetaCompletaTest extends TestCase {
         $tarjeta = new TarjetaCompleta(0,123);
     
         // Hacer dos viajes gratuitos en el mismo día
-        $colectivo = new Colectivo("115");
+        $colectivo = new Colectivo(115,$tarjeta);
         $boleto1 = $colectivo->pagarTarifa($tarjeta);
     
-        $colectivo = new Colectivo("116");
+        $colectivo = new Colectivo(116,$tarjeta);
         $boleto2 = $colectivo->pagarTarifa($tarjeta);
     
         // Hacer un tercer viaje que debería cobrarse con precio completo
-        $colectivo = new Colectivo("117");
+        $colectivo = new Colectivo(117,$tarjeta);
         $boleto3 = $colectivo->pagarTarifa($tarjeta);
     
         // Verificar que los primeros dos viajes son gratuitos
