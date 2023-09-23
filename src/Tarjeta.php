@@ -44,8 +44,8 @@ class Tarjeta{
 }
 
 class TarjetaParcial extends Tarjeta {
-    public function __construct($saldoInicial = 0) {
-        parent::__construct($saldoInicial);
+    public function __construct($saldoInicial = 0, $IDTarjeta = 0) {
+        parent::__construct($saldoInicial, $IDTarjeta);
     }
 
     public function descargarSaldo($quitar) {
@@ -55,8 +55,8 @@ class TarjetaParcial extends Tarjeta {
 
 
 class TarjetaCompleta extends Tarjeta {
-    public function __construct($saldoInicial = 0) {
-        parent::__construct($saldoInicial);
+    public function __construct($saldoInicial = 0,$IDTarjeta = 0) {
+        parent::__construct($saldoInicial,$IDTarjeta);
     }
 
     public function descargarSaldo($quitar) {
