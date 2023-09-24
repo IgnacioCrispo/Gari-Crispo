@@ -1,8 +1,6 @@
 <?php
 namespace TrabajoSube;
 
-require_once 'Tarjeta.php';
-
 use TrabajoSube\Tarjeta;
 use TrabajoSube\Boleto;
 
