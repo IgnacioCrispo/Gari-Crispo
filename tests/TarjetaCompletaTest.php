@@ -46,7 +46,7 @@ class TarjetaCompletaTest extends TestCase {
         // Crear una tarjeta de tipo boleto educativo gratuito
         $tarjeta = new TarjetaCompleta(0,123);
     
-        // Hacer dos viajes gratuitos en el mismo día
+        // Hacer dos viajes gratuitos en el mismo dí
         $colectivo = new Colectivo(115,$tarjeta);
         $boleto1 = $colectivo->pagarTarifa($tarjeta);
     
