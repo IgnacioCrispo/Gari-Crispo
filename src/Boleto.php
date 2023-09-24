@@ -13,14 +13,15 @@ class Boleto{
     private $saldoRestante;
     private $tarifaUsada;
     private $IDTarjetaUsada;
-    private $fechaHora = time();
+    private $fechaHora;
 
 
-    public function __construct($tarjeta,$linea,$tarifa) {
+    public function __construct($tarjeta,$linea,$tarifa,$fecha) {
         $this->lineaColectivo = $linea;
         $this->tarifaUsada = $tarifa;
         $this->saldoRestante = $tarjeta->obtenerSaldo();
         $this->IDTarjetaUsada = $tarjeta->obtenerID();
+        $this->fechaHora = $fecha;
     }
 
     public function imprimirBoleto() {
