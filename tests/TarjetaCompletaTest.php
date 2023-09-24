@@ -2,7 +2,6 @@
 use PHPUnit\Framework\TestCase;
 use TrabajoSube\TarjetaCompleta;
 use TrabajoSube\Colectivo;
-use TrabajoSube\Boleto;
 
 class TarjetaCompletaTest extends TestCase {
     public function testPagarBoleto() {
