@@ -10,7 +10,7 @@ class Colectivo{
     private $tarjeta;
     private $fechaHora;
 
-    public function __construct($lineaColectivo = 0,$tarjetaUsada, $fecha = time()) {
+    public function __construct($lineaColectivo = 0,$tarjetaUsada, $fecha) {
         $this->linea = $lineaColectivo;
         $this->tarjeta = $tarjetaUsada;
         $this->fechaHora = $fecha;
