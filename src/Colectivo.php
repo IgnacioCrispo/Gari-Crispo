@@ -11,6 +11,7 @@ class Colectivo{
     private $fechaHora;
 
     public function __construct($lineaColectivo = 0,$tarjetaUsada, $fecha) {
+        $fecha = time();
         $this->linea = $lineaColectivo;
         $this->tarjeta = $tarjetaUsada;
         $this->fechaHora = $fecha;
