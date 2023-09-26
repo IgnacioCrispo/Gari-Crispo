@@ -19,7 +19,7 @@ class Colectivo{
     public function pagarTarifa($tarjeta) {
         if($tarjeta->obtenerSaldo() >= $this->tarifa) {
             $tarjeta->descargarSaldo($this->tarifa);
-            $boleto = new Boleto($tarjeta, $this->linea, $this->tarifa, $this->fechaHora);
+            $boleto = new Boleto($tarjeta, $this->linea, $tarjeta->descargarSaldo($this->tarifa), $this->fechaHora);
             return $boleto;
         }
         elseif(($tarjeta->obtenerSaldo() - $this->tarifa) >= 211.84 && $tarjeta->obtenerPlus() > 0) {

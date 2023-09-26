@@ -44,23 +44,39 @@ class Tarjeta{
 }
 
 class TarjetaParcial extends Tarjeta {
+    private $medioDisponibles = 4;
     public function __construct($saldoInicial = 0, $IDTarjeta = 0) {
         parent::__construct($saldoInicial, $IDTarjeta);
     }
 
     public function descargarSaldo($quitar) {
+        if($this->medioDisponibles > 0){
         $this->saldo -= ($quitar / 2);
-    }
+        return $quitar/2;
+        }
+        else{
+            $this->saldo -= $quitar;
+            return $quitar;
+        }
+    }    
 }
 
 
 class TarjetaCompleta extends Tarjeta {
+    private $gratisDisponible = 2;
     public function __construct($saldoInicial = 0,$IDTarjeta = 0) {
         parent::__construct($saldoInicial,$IDTarjeta);
     }
 
     public function descargarSaldo($quitar) {
-        $this->saldo -= 0;
+        if($this->gratisDisponible > 0){
+            $this->saldo -= 0;
+            return 0;
+        }
+        else{
+            $this->saldo -= $quitar;
+            return $quitar;
+        }
     }
 }
 ?>
