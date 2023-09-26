@@ -1,8 +1,7 @@
 <?php
+namespace TrabajoSube;
+
 use PHPUnit\Framework\TestCase;
-use TrabajoSube\TarjetaCompleta;
-use TrabajoSube\Colectivo;
-use TrabajoSube\Boleto;
 
 class TarjetaCompletaTest extends TestCase {
     public function testPagarBoleto() {
@@ -14,7 +13,7 @@ class TarjetaCompletaTest extends TestCase {
         $pagoExitoso = $colectivo->pagarTarifa($tarjeta);
 
         // Verifica que el pago haya sido exitoso
-        $this->assertEquals(get_class($pagoExitoso), "Boleto");
+        $this->assertEquals(get_class($pagoExitoso), "TrabajoSube\Boleto");
 
         // Verifica que el saldo de la tarjeta sea 1000 después del pago
         $this->assertEquals(1000, $tarjeta->obtenerSaldo());
@@ -37,8 +36,8 @@ class TarjetaCompletaTest extends TestCase {
     
         // Verificar que los primeros dos viajes son gratuitos
 
-        $this->assertEquals(get_class($boleto1), "Boleto");
-        $this->assertEquals(get_class($boleto2), "Boleto");
+        $this->assertEquals(get_class($boleto1), "TrabajoSube\Boleto");
+        $this->assertEquals(get_class($boleto2), "TrabajoSube\Boleto");
     
         // Verificar que el tercer viaje no es gratuito
         $this->assertFalse($boleto3);
@@ -60,8 +59,8 @@ class TarjetaCompletaTest extends TestCase {
         $boleto3 = $colectivo->pagarTarifa($tarjeta);
     
         // Verificar que los primeros dos viajes son gratuitos
-        $this->assertEquals(get_class($boleto1), "Boleto");
-        $this->assertEquals(get_class($boleto2), "Boleto");
+        $this->assertEquals(get_class($boleto1), "TrabajoSube\Boleto");
+        $this->assertEquals(get_class($boleto2), "TrabajoSube\Boleto");
     
         // Verificar que el tercer viaje se cobre con precio completo
         $this->assertTrue($boleto3 != false);
