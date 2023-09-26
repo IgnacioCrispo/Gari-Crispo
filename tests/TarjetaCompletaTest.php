@@ -14,7 +14,7 @@ class TarjetaCompletaTest extends TestCase {
         $pagoExitoso = $colectivo->pagarTarifa($tarjeta);
 
         // Verifica que el pago haya sido exitoso
-        $this->assertTrue($pagoExitoso);
+        $this->assertEquals(get_class($pagoExitoso), "Boleto");
 
         // Verifica que el saldo de la tarjeta sea 1000 después del pago
         $this->assertEquals(1000, $tarjeta->obtenerSaldo());
@@ -36,8 +36,9 @@ class TarjetaCompletaTest extends TestCase {
         $boleto3 = $colectivo->pagarTarifa($tarjeta);
     
         // Verificar que los primeros dos viajes son gratuitos
-        $this->assertTrue($boleto1 !== false);
-        $this->assertTrue($boleto2 !== false);
+
+        $this->assertEquals(get_class($boleto1), "Boleto");
+        $this->assertEquals(get_class($boleto2), "Boleto");
     
         // Verificar que el tercer viaje no es gratuito
         $this->assertFalse($boleto3);
@@ -59,11 +60,11 @@ class TarjetaCompletaTest extends TestCase {
         $boleto3 = $colectivo->pagarTarifa($tarjeta);
     
         // Verificar que los primeros dos viajes son gratuitos
-        $this->assertTrue($boleto1 !== false);
-        $this->assertTrue($boleto2 !== false);
+        $this->assertEquals(get_class($boleto1), "Boleto");
+        $this->assertEquals(get_class($boleto2), "Boleto");
     
         // Verificar que el tercer viaje se cobre con precio completo
-        $this->assertTrue($boleto3 !== false);
+        $this->assertTrue($boleto3 != false);
         $this->assertEquals(120, $colectivo->obtenerTarifa());
     }
 }
