@@ -1,42 +1,27 @@
 <?php
 namespace TrabajoSube;
 
-use TrabajoSube\Tarjeta;
-use TrabajoSube\Boleto;
-
-class Colectivo{
-    private $tarifa = 120;
+class Colectivo {
     private $linea;
-    private $tarjeta;
-    private $fechaHora;
+    private $tarifa = 120;
 
-    public function __construct($lineaColectivo = 0,$tarjetaUsada, $fecha) {
-        $this->linea = $lineaColectivo;
-        $this->tarjeta = $tarjetaUsada;
-        $this->fechaHora = $fecha;
+
+    public function __construct($lineaUsada = 0) {
+        $this->linea = $lineaUsada;
     }
 
-    public function pagarTarifa($tarjeta) {
-        if($tarjeta->obtenerSaldo() >= $this->tarifa) {
-            $tarjeta->descargarSaldo($this->tarifa);
-            $boleto = new Boleto($tarjeta, $this->linea, $this->tarifa, $this->fechaHora);
+    public function pagarCon($tarjeta,$boleto) {
+        if ($tarjeta->obtenerSaldo() >= $this->tarifa) {
+            $tarjeta->restarSaldo($this->tarifa);
+            $boleto->actualizarBoleto($this->linea,$this->tarifa,$tarjeta->obtenerSaldo());
+            
             return $boleto;
         }
-        elseif(($tarjeta->obtenerSaldo() - $this->tarifa) >= 211.84 && $tarjeta->obtenerPlus() > 0) {
-            $tarjeta->descargarSaldo($this->tarifa);
-            $tarjeta->descontarPlus();
-            $boleto = new Boleto($tarjeta, $this->linea, $this->tarifa, $this->fechaHora);
-            return $boleto;
+        else {
+            return false;
         }
-        return false;
-    }
-
-    public function obtenerTarifa() {
-        return $this->tarifa;
-    }
-
-    public function getLinea() {
-        return $this->linea;
     }
 }
+
+
 ?>

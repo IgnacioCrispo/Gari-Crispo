@@ -1,66 +1,29 @@
 <?php
 namespace TrabajoSube;
-class Tarjeta{
-    private $saldo;
-    private $plus = 2;
-    private $ID;
 
-    public function __construct($saldoInicial = 0, $IDTarjeta = 0) {
+class Tarjeta {
+    private $saldo;
+
+
+    public function __construct($saldoInicial) {
         $this->saldo = $saldoInicial;
-        $this->ID = $IDTarjeta;
     }
 
-    public function cargarSaldo($agregar) {
-        if(($this->saldo + $agregar) < 6600 && in_array($agregar, [150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000, 2500, 3000, 3500, 4000])) {
-            $this->saldo += $agregar;
-            if($this->saldo > 0) {
-                $this->plus = 2;
-            }
+    public function cargarTarjeta($cargarSaldo) {
+        if($this->saldo + $cargarSaldo < 6600 && in_array($cargarSaldo,[150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000, 2500, 3000, 3500, 4000])) {
+            $this->saldo += $cargarSaldo;
             return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 
-    public function descontarPlus() {
-        $this->plus -= 1;
-    }
-
-    public function descargarSaldo($quitar) {
-        $this->saldo -= $quitar;
-    }
-
-    public function obtenerSaldo() {
-        return $this->saldo;
-    }
-
-    public function obtenerVPlus() {
-        return $this->plus;
-    }
-
-    public function obtenerID() {
-        return $this->ID;
+    public function descargarSaldo($restarSaldo) {
+        $this->saldo -= $restarSaldo;
     }
 
 }
-
-class TarjetaParcial extends Tarjeta {
-    private $medioDisponibles = 4;
-    public function __construct($saldoInicial = 0, $IDTarjeta = 0) {
-        parent::__construct($saldoInicial, $IDTarjeta);
-    }
-
-    public function descargarSaldo($quitar) {
-        if($this->medioDisponibles > 0){
-        $this->saldo -= ($quitar / 2);
-        return $quitar/2;
-        }
-        else{
-            $this->saldo -= $quitar;
-            return $quitar;
-        }
-    }    
-}
-
 
 
 ?>
