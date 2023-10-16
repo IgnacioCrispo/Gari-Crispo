@@ -8,6 +8,8 @@ class Tarjeta {
     private $saldoExtra;
     private $plus = 2;
     private $historialSaldo = [];
+    private $vecesUsadaMes = 0;
+    private $ultimoMes;
 
 
 
@@ -41,6 +43,8 @@ class Tarjeta {
     public function descargarSaldo($restarSaldo) {
         $this->historialSaldo[] = $this->saldo;
         $this->saldo -= $restarSaldo;
+        $this->vecesUsadaMes++;
+        $this->agregarSaldoExtra();
     }
 
     public function agregarSaldoExtra() {
@@ -53,5 +57,16 @@ class Tarjeta {
             $this->saldo = 6600;
         }
     }
+
+    public function actualizarMes($mes) {
+        if($this->ultimoMes == $mes || $this->ultimoMes == null){
+            $this->ultimoMes = $mes;
+        }
+        else {
+            $this->vecesUsadaMes = 0;
+            $this->ultimoMes = $mes;
+        }
+    }
+
 }
 ?>
