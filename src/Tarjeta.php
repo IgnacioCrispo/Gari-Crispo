@@ -68,5 +68,9 @@ class Tarjeta {
         }
     }
 
+    public function establecerDias($dias){
+        $this->vecesUsadaMes = $dias;
+    }
+
 }
 ?>
