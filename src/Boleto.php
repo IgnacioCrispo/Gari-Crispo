@@ -9,14 +9,28 @@ class Boleto {
     private $IDTarjetaUsada;
     private $saldoAnterior;
 
-    public function actualizarBoleto($linea,$tarifa,$saldo,$tipoDeTarjeta,$IDTarjeta) {
+    public function __construct($linea,$tarifa,$tarjeta) {
+        $this->lineaUsada = $linea;
+        $this->tarifaUsada = $tarifa;
+        $this->saldoRestante = $tarjeta->obtenerSaldo();
+        $this->tipoTarjeta = $tarifa->obtenerTipoTarjeta();
+        $this->IDTarjetaUsada = $tarifa->obtenerIdTarjetaUsada();
+    }
+
+
+
+
+
+
+
+/*   public function actualizarBoleto($linea,$tarifa,$saldo,$tipoDeTarjeta,$IDTarjeta) {
         $this->lineaUsada = $linea;
         $this->tarifaUsada = $tarifa;
         $this->saldoRestante = $saldo;
         $this->tipoTarjeta = $tipoDeTarjeta;
         $this->IDTarjetaUsada = $IDTarjeta;
     }
-    public function mostrarBoleto($tarjeta) {
+/*    public function mostrarBoleto($tarjeta) {
         $this->saldoAnterior = end($tarjeta->historialSaldo);
         printf("Linea: %s\n", $this->lineaUsada);
         printf("Tarifa: %s\n", $this->tarifaUsada);
@@ -26,7 +40,7 @@ class Boleto {
         printf("Saldo Restante: %s\n", $this->saldoRestante);
         printf("Tipo de Tarjeta: %s\n", $this->tipoTarjeta);
         printf("ID de Tarjeta Usada: %s\n", $this->IDTarjetaUsada);
-    }
+    }*/
 
     public function obtenerLineaUsada() {
         return $this->lineaUsada;

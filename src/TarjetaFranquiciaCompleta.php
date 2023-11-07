@@ -3,17 +3,51 @@ namespace TrabajoSube;
 
 class TarjetaFranquiciaCompleta extends Tarjeta{
     protected $tipo;
-    private $habilitada = true;
+    private $habilitadaFC = true;
     private $viajesHoy = 0;
     private $fechaUltimoViaje;
+    private $tiposEspeciales = ["Jubilado","Discapacitado"];
 
 
-    public function __construct($saldoInicial,$tipoDeTarjeta = "Jubilados") {
+    public function __construct($saldoInicial,$tipoDeTarjeta) {
         parent::__construct($saldoInicial);
         $this->tipo = $tipoDeTarjeta;
     }
 
-    public function registrarViaje($tiempo) {
+    public function pagar($tarifa) {
+        $this->saldo -= $tarifa;
+        $this->actualizarSaldoExtra();
+        $this->actualizarViajesPlus();
+
+    }
+
+    public function cargarTarjeta($cargar) {
+        if(in_array($cargar,$this->cargasValidas)) {
+            $this->saldo += $cargar;
+            $this->actualizarSaldoExtra();
+            $this->actualizarViajesPlus();
+            $this->actualizarHabilitadaFC();
+        } else {
+            return false;
+        }
+    }
+
+    public function actualizarHabilitadaFC() {
+        if(in_array($this->tipo,$this->tiposEspeciales)) {
+            $this->habilitadaFC = true;
+        } elseif($this->saldo > 0) {
+            $this->habilitadaFC = true;
+        } elseif($this->saldo > -211.84 && $this->plus > 0) {
+            $this->habilitadaFC = true;
+        } else {
+            $this->habilitadaFC = false;
+        }
+    }
+
+
+
+
+/*    public function registrarViaje($tiempo) {
         $this->viajesHoy++;
         $this->tiempoUltimoViaje = $tiempo;
         $this->actualizarHabilitacion($tiempo);
@@ -46,9 +80,9 @@ class TarjetaFranquiciaCompleta extends Tarjeta{
             return $this->habilitada;
         }
     }
-
+*/
     public function obtenerHabilitada(){
-        return $this->habilitada;
+        return $this->habilitadaFC;
     }
 }
 ?>

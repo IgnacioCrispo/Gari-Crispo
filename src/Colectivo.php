@@ -3,7 +3,9 @@ namespace TrabajoSube;
 
 class Colectivo {
     private $linea;
-    private $tarifa = 120;
+    private $tarifaNormal = 185;
+    private $tarifaInterurbana = 300;
+    private $tarifaBase;
     private $tarifaModificada;
     private $lineasIterurbanas = [1000,1001,1002];
 
@@ -11,7 +13,83 @@ class Colectivo {
         $this->linea = $lineaUsada;
     }
 
-    public function pagarCon($tarjeta,$boleto,$tiempo=0){
+    public function pagarCon($tarjeta,$tiempo){
+        if(in_array($this->linea,$this->lineasIterurbanas)){
+            $this->tarifaBase = $this->tarifaInterurbana;
+        } else {
+            $this->tarifaBase = $this->tarifaNormal;
+        }
+
+        switch (get_class($tarjeta)) {
+            case 'TrabajoSube\TarjetaFranquiciaCompleta':
+                    $this->actualizarTarifaFC($tarjeta);
+
+                
+                
+                break;
+            case 'TrabajoSube\TarjetaFranquiciaParcial':
+                $this->actualizarTarifaFP($tarjeta);
+                break;
+            default:
+                if($tarjeta->obtenerHabilitada()){
+                    $tarjeta->actualizarMesActual($tiempo);
+                    if($tarjeta->verificarMismoMes()) {
+                    $this->actualizarTarifaN($tarjeta);
+                        $tarjeta->pagar($this->tarifaModificada);
+                        $tarjeta->agregarDiasUsada();
+
+                        $boleto = new Boleto($this->linea,$this->tarifaModificada,$tarjeta);
+                        return $boleto;
+                    } else {
+                        $tarjeta->reestablecerDiasUsada();
+                        $this->actualizarTarifaN($tarjeta);
+                        $tarjeta->pagar($this->tarifaModificada);
+                        $tarjeta->agregarDiasUsada();
+                        $boleto = new Boleto($this->linea,$this->tarifaModificada,$tarjeta);
+                        return $boleto;
+                    }
+                } else {
+                    return false;
+                }
+        }
+    }
+
+
+
+
+    public function actualizarTarifaFC($tarjeta) {
+        if($tarjeta->obtenerHabilitada()){
+            $this->tarifaModificada = 0;
+        }
+        else {
+            $this->tarifaModificada = $this->tarifaBase;
+        }
+    }
+
+    public function actualizarTarifaFP($tarjeta) {
+        if($tarjeta->obtenerHabilitada()){
+            $this->tarifaModificada = $this->tarifaBase * 0.5;
+        }
+        else {
+            $this->tarifaModificada = $this->tarifaBase;
+        }
+    }
+
+    public function actualizarTarifaN($tarjeta) {
+        if($tarjeta->obtenerVecesUsadaMes() < 30){
+            $this->tarifaModificada = $this->tarifaBase;
+        }
+        elseif($tarjeta->obtenerVecesUsadaMes() > 80) {
+            $this->tarifaModificada = $this->tarifaBase * 0.75;
+        }
+        else {
+            $this->tarifaModificada = $this->tarifaBase * 0.8;
+        }
+    }
+
+
+
+/*   public function pagarCon($tarjeta,$boleto,$tiempo=0){
         $boletoDevuelto = false;
         $this->actualizarTarifa($tarjeta);
 
@@ -64,13 +142,13 @@ class Colectivo {
                 }
         }
     }
-
+*/
     public function obtenerLinea(){
         return $this->linea;
     }
 
     public function obtenerTarifa(){
-        return $this->tarifa;
+        return $this->tarifaBase;
     }
 
     public function obtenerTarifaModificada(){
@@ -79,12 +157,12 @@ class Colectivo {
 
 
     
-    public function actualizarTarifa($tarjeta){
+/*    public function actualizarTarifa($tarjeta){
         if(in_array($this->linea,$this->lineasIterurbanas)) {
-            $this->tarifa = 184;
+            $this->tarifa = $tarifaInterurbana;
         }
         else {
-            $this->tarifa = 120;
+            $this->tarifa = $tarifaNormal;
         }
 
         if(get_class($tarjeta) == 'TrabajoSube\TarjetaFranquiciaCompleta' && $tarjeta->obtenerHabilitada()) {
@@ -108,7 +186,7 @@ class Colectivo {
             $this->tarifaModificada = $this->tarifa;
         }
     }
-
+*/
     public function actualizarDias($tarjeta,$tiempo) {
         if(get_class($tarjeta) == 'TrabajoSube\Tarjeta') {
             $tarjeta->sumarVecesUsadas();
