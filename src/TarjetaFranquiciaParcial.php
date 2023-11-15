@@ -1,7 +1,7 @@
 <?php
 namespace TrabajoSube;
 
-class TarjetaFranquiciaParcial extends Tarjeta{
+class TarjetaFranquiciaParcial extends Tarjeta {
     protected $tipo;
     private $habilitadaFP;
     protected $vecesUsada = 0;
@@ -14,8 +14,8 @@ class TarjetaFranquiciaParcial extends Tarjeta{
         $this->tipo = $tipoTarjeta;
     }
 
-    public function actualizarHabilitadaFP($tiempo) {
-        if($this->vecesUsada < 4) {
+    public function actualizarHabilitadaFP($tiempo) {//t
+        if($this->vecesUsada < 4 && $this->tiempoValido($tiempo)) {
             $this->habilitadaFP = true;
         } else {
             $this->flag = false;
@@ -23,7 +23,7 @@ class TarjetaFranquiciaParcial extends Tarjeta{
         }
     }
 
-    public function actualizarTarifa($tarifa,$tiempo) {
+    public function actualizarTarifa($tarifa,$tiempo) {//t
         $this->actualizarHabilitadaFP($tiempo);
         if($this->habilitadaFP) {
             return $tarifa * 0.5;
@@ -32,7 +32,7 @@ class TarjetaFranquiciaParcial extends Tarjeta{
         }
     }
 
-    public function actualizarVecesUsada($tiempo) {
+    public function actualizarVecesUsada($tiempo) {//t
         $fechaActual = $tiempo->obtenerSoloFecha();
 
         if($this->fechaAnterior == $fechaActual && $this->flag) {
@@ -45,7 +45,7 @@ class TarjetaFranquiciaParcial extends Tarjeta{
         }
     }
 
-    public function tiempoValido($tiempo) {
+    public function tiempoValido($tiempo) {//t
         $diaSemana = date('N',$tiempo->obtenerTiempoInt());
         $hora = date('G',$tiempo->obtenerTiempoInt());
         $tiempoActual = $tiempo->obtenerTiempoInt();
@@ -59,6 +59,12 @@ class TarjetaFranquiciaParcial extends Tarjeta{
             $this->tiempoAnterior = $tiempoActual;
             return false;
         }
+    }
+
+
+
+    public function obtenerHabilitadaFP() {//t
+        return $this->habilitadaFP;
     }
 }
 ?>

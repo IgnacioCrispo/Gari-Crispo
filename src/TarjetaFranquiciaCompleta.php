@@ -14,7 +14,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
         $this->tipo = $tipoTarjeta;
     }
 
-    public function actualizarHabilitadaFC($tiempo) {
+    public function actualizarHabilitadaFC($tiempo) {//t
         if(in_array($this->tipo,$this->tiposEspeciales) && $this->tiempoValido($tiempo)) {
             $this->habilitadaFC = true;
         } elseif($this->vecesUsada < 2 && $this->tiempoValido($tiempo)) {
@@ -25,7 +25,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
         }
     }
 
-    public function actualizarTarifa($tarifa,$tiempo) {
+    public function actualizarTarifa($tarifa,$tiempo) {//t
         $this->actualizarHabilitadaFC($tiempo);
         if($this->habilitadaFC) {
             return 0;
@@ -34,7 +34,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
         }
     }
 
-    public function actualizarVecesUsada($tiempo) {
+    public function actualizarVecesUsada($tiempo) {//t
         $fechaActual = $tiempo->obtenerSoloFecha();
 
         if($this->fechaAnterior == $fechaActual && $this->flag) {
@@ -47,7 +47,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
         }
     }
 
-    public function tiempoValido($tiempo) {
+    public function tiempoValido($tiempo) {//t
         $diaSemana = date('N',$tiempo->obtenerTiempoInt());
         $hora = date('G',$tiempo->obtenerTiempoInt());
 
@@ -56,6 +56,11 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
         } else {
             return false;
         }
+    }
+
+
+    public function obtenerHabilitadaFC() {//t
+        return $this->habilitadaFC;
     }
 }
 ?>

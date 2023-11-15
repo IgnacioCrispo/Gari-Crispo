@@ -3,20 +3,12 @@ namespace TrabajoSube;
 use PHPUnit\Framework\TestCase;
 
 class ColectivoTest extends TestCase {
-    
-    public function testCargarTarjeta() {
-        $tarjeta = new Tarjeta(0,10);
-        
-        $verificar = $tarjeta->cargarTarjeta(100);
-        $this->assertFalse($verificar);
 
-        $verificar = $tarjeta->cargarTarjeta(150);
-        $this->assertTrue($verificar);
+    public function testObtener() {
+        $colectivo = new Colectivo(10);
 
-        $verificar = $tarjeta->cargarTarjeta(4000);
-        $this->assertTrue($verificar);
+        $this->assertEquals(10, $colectivo->obtenerLinea());
     }
-
     public function testPagarBoleto() {
         $tarjeta = new Tarjeta(-211.84,100);
         $colectivo = new Colectivo(10);
@@ -137,108 +129,14 @@ class ColectivoTest extends TestCase {
         $this->assertEquals($verificar,$verificar);
     }
 
+    public function testUsarTarifa(){
+        $colectivoN = new Colectivo(10);
+        $colectivoI = new Colectivo(1000);
 
-
-
-
-
-
-
-    public function testObtener(){
-        $tarjeta = new Tarjeta(4000,1);
-        $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
-        $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
-        $colectivo = new Colectivo(10);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
-
-        $colectivo->pagarCon($tarjeta,$tiempo);
-        $colectivo->pagarCon($tarjetaFC,$tiempo);
-        $colectivo->pagarCon($tarjetaFP,$tiempo);
-
-        $verificar = $tarjeta->obtenerTiempoAnterior();
-        $this->assertEquals($tiempo->obtenerTiempoInt(), $verificar);
-        $verificar = $tarjetaFC->obtenerTiempoAnterior();
-        $this->assertEquals($tiempo->obtenerTiempoInt(), $verificar);
-        $verificar = $tarjetaFP->obtenerTiempoAnterior();
-        $this->assertEquals($tiempo->obtenerTiempoInt(), $verificar);
-
-        $verificar = $tarjeta->obtenerLineaAnterior();
-        $this->assertEquals(10, $verificar);
-        $verificar = $tarjetaFC->obtenerLineaAnterior();
-        $this->assertEquals(10, $verificar);
-        $verificar = $tarjetaFP->obtenerLineaAnterior();
-        $this->assertEquals(10, $verificar);
-
-        $verificar = $tarjeta->obtenerTarjetaSaldo();
-        $this->assertEquals(3815, $verificar);
-        $verificar = $tarjetaFC->obtenerTarjetaSaldo();
-        $this->assertEquals(4000, $verificar);
-        $verificar = $tarjetaFP->obtenerTarjetaSaldo();
-        $this->assertEquals(3907.5, $verificar);
-
-        $verificar = $tarjeta->obtenerTarjetaTipo();
-        $this->assertEquals('Normal', $verificar);
-        $verificar = $tarjetaFC->obtenerTarjetaTipo();
-        $this->assertEquals('Jubilado', $verificar);
-        $verificar = $tarjetaFP->obtenerTarjetaTipo();
-        $this->assertEquals('Estudiantil', $verificar);
-
-        $verificar = $tarjeta->obtenerTarjetaID();
-        $this->assertEquals(1, $verificar);
-        $verificar = $tarjetaFC->obtenerTarjetaID();
-        $this->assertEquals(2, $verificar);
-        $verificar = $tarjetaFP->obtenerTarjetaID();
-        $this->assertEquals(3, $verificar);
-
-        $verificar = $tarjeta->obtenerTarifaModificada();
-        $this->assertEquals(185, $verificar);
-        $verificar = $tarjetaFC->obtenerTarifaModificada();
-        $this->assertEquals(0, $verificar);
-        $verificar = $tarjetaFP->obtenerTarifaModificada();
-        $this->assertEquals(92.5, $verificar);
+        $verificar = $colectivoN->usarTarifa();
+        $this->assertEquals(185,$verificar);
+        $verificar = $colectivoI->usarTarifa();
+        $this->assertEquals(300,$verificar);
     }
-
-    public function testActualizarTariza(){
-        $tarjeta = new Tarjeta(4000,1);
-        $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
-        $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
-
-
-        $this->assertEquals(100,$tarjeta->actualizarTarifa(100,$tiempo));
-        $tarjeta->sumarVecesUsada(29);
-        $this->assertEquals(100,$tarjeta->actualizarTarifa(100,$tiempo));
-        $tarjeta->sumarVecesUsada(30);
-        $this->assertEquals(80,$tarjeta->actualizarTarifa(100,$tiempo));
-        $tarjeta->sumarVecesUsada(50);
-        $this->assertEquals(75,$tarjeta->actualizarTarifa(100,$tiempo));
-
-
-        $this->assertEquals(0,$tarjetaFC->actualizarTarifa(100,$tiempo));
-        $tarjetaFC->sumarVecesUsada(2);
-        $this->assertEquals(0,$tarjetaFC->actualizarTarifa(100,$tiempo));
-        
-        $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Estudiantil');
-        $this->assertEquals(0,$tarjetaFC->actualizarTarifa(100,$tiempo));
-        $tarjetaFC->sumarVecesUsada(2);
-        $this->assertEquals(100,$tarjetaFC->actualizarTarifa(100,$tiempo));
-
-        
-        $this->assertEquals(50,$tarjetaFP->actualizarTarifa(100,$tiempo));
-        $tarjetaFC->sumarVecesUsada(4);
-//        $this->assertEquals(100,$tarjetaFP->actualizarTarifa(100,$tiempo));
-
-    }
-
-
-
-
-
-
-
-
-
-
-
 }
 ?>

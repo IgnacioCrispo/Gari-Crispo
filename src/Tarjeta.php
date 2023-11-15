@@ -10,7 +10,8 @@ class Tarjeta {
                                 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000, 2500, 3000,
                                 3500, 4000];
     protected $plus = 2;
-    protected $vecesUsada;
+    private $flag = true;
+    protected $vecesUsada = 0;
     private $tarifaModificada = 0;
     protected $habilitada;
     protected $habilitadaTrasbordo;
@@ -24,11 +25,13 @@ class Tarjeta {
         $this->ID = $IDTarjeta;
     }
 
-    public function cargarTarjeta($cargarSaldo) {
+    public function cargarTarjeta($cargarSaldo) { //t
         if(in_array($cargarSaldo,$this->cargasValidas)) {
             $this->saldo += $cargarSaldo;
             $this->actualizarSaldoExtra();
+            $this->flag = false;    // Esta bandera es para que si se da el caso en el que al cargar la tarjeta y el saldo siga en negativo, entonces no se van a restar plus
             $this->actualizarViajesPlus();
+            $this->flag = true;
 
             return true;
         } else {
@@ -36,7 +39,7 @@ class Tarjeta {
         }
     }
 
-    public function descargarTarjeta($tarifa,$linea,$tiempo) {
+    public function descargarTarjeta($tarifa,$linea,$tiempo) {//t
         $this->actualizarHabilitadaTrasbordo($tiempo,$linea);
         $this->tarifaModificada = $this->actualizarTarifa($tarifa,$tiempo);
         $this->actualizarHabilitada($tiempo);
@@ -62,17 +65,17 @@ class Tarjeta {
         }
     }
 
-    public function actualizarHabilitada($tiempo) {
+    public function actualizarHabilitada($tiempo) {//t
         if($this->saldo > 0) {
             $this->habilitada = true;
-        } elseif(($this->saldo - $this->tarifaModificada) > -211.84 && $this->plus > 0) {
+        } elseif(($this->saldo - $this->tarifaModificada) >= -211.84 && $this->plus > 0) {
             $this->habilitada = true;
         } else {
             $this->habilitada = false;
         }
     }
 
-    public function actualizarHabilitadaTrasbordo($tiempo,$linea) {
+    public function actualizarHabilitadaTrasbordo($tiempo,$linea) {//t
         if($this->lineaAnterior == null || $this->tiempoAnterior == null) {
             $this->habilitadaTrasbordo = false;
         } elseif($this->lineaAnterior != $linea && ($tiempo->obtenerTiempoInt() - $this->tiempoAnterior < 3600)) {
@@ -83,7 +86,7 @@ class Tarjeta {
         }
     }
 
-    public function actualizarVecesUsada($tiempo) {
+    public function actualizarVecesUsada($tiempo) {//t
         $mes = date('m', $tiempo->obtenerTiempoInt());
         if($this->mesAnterior == $mes) {
             $this->vecesUsada++;
@@ -93,7 +96,7 @@ class Tarjeta {
         }
     }
 
-    public function actualizarSaldoExtra() {
+    public function actualizarSaldoExtra() {//t
         if($this->saldo > 6600) {
             $this->saldoExtra = $this->saldo - 6600;
             $this->saldo = 6600;
@@ -106,15 +109,15 @@ class Tarjeta {
         }
     }
 
-    public function actualizarViajesPlus(){
+    public function actualizarViajesPlus(){//t
         if($this->saldo > 0) {
             $this->plus = 2;
-        } else {
+        } elseif($this->flag) {
             $this->plus--;
         }
     }
 
-    public function actualizarTarifa($tarifa,$tiempo) {
+    public function actualizarTarifa($tarifa,$tiempo) {//t
         if($this->habilitadaTrasbordo){
             return 0;
         } elseif($this->vecesUsada < 30) {
@@ -148,9 +151,33 @@ class Tarjeta {
     public function obtenerTiempoAnterior() { //t
         return $this->tiempoAnterior;
     }
+    public function obtenerTarjetaSaldoExtra() {//t
+        return $this->saldoExtra;
+    }
+    public function obtenerViajesPlus() {//t
+        return $this->plus;
+    }
+    public function obtenerVecesUsada(){//t
+        return $this->vecesUsada;
+    }
+    public function obtenerHabilitadaTrasbordo() {//t
+        return $this->habilitadaTrasbordo;
+    }
+    public function obtenerHabilitada() {//t
+        return $this->habilitada;
+    }
 
     public function sumarVecesUsada($veces) {
         $this->vecesUsada += $veces;
+    }
+    public function sumarSaldoExtra($saldo) {//t
+        $this->saldoExtra += $saldo;
+    }
+    public function restarViajesPlus($cantidad) {//t
+        $this->plus -= $cantidad;
+    }
+    public function establecerSaldo($saldo) {//t
+        $this->saldo = $saldo;
     }
 }
 ?>

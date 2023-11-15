@@ -11,7 +11,7 @@ class Colectivo {
         $this->linea = $lineaUsada;
     }
 
-    public function pagarCon($tarjeta,$tiempo) {
+    public function pagarCon($tarjeta,$tiempo) {//t
         $pagoHecho = $tarjeta->descargarTarjeta($this->usarTarifa(),$this->linea,$tiempo);
         if($pagoHecho){
             $boleto = new Boleto($this->linea,$tarjeta->obtenerTarifaModificada(),$tarjeta->obtenerTarjetaID(),$tarjeta->obtenerTarjetaTipo(),$tarjeta->obtenerTarjetaSaldo(),$tiempo);
@@ -21,7 +21,7 @@ class Colectivo {
         }
     }
 
-    public function usarTarifa() {
+    public function usarTarifa() {//t
         if(in_array($this->linea,$this->lineasInterurbanas)) {
             return $this->tarifaInterurbana;
         } else {
@@ -30,6 +30,11 @@ class Colectivo {
     }   
 
 
+
+
+    public function obtenerLinea() {//t
+        return $this->linea;
+    }
 
 
 }

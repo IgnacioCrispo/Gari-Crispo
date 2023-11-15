@@ -16,7 +16,7 @@ class TiempoInventado {
         $this->tiempo += $aDias * 24 * 60 * 60;
         return $this->tiempo;
     }
-    public function agregarMese($aMeses) {
+    public function agregarMeses($aMeses) {
         $this->tiempo = strtotime("+$aMeses months", $this->tiempo);
         return $this->tiempo;
     }
