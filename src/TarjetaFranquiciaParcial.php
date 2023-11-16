@@ -31,11 +31,11 @@ class TarjetaFranquiciaParcial extends Tarjeta {
             return $tarifa;
         }
     }
-
+ 
     public function actualizarVecesUsada($tiempo) {//t
         $fechaActual = $tiempo->obtenerSoloFecha();
 
-        if($this->fechaAnterior == $fechaActual && $this->flag) {
+        if($this->fechaAnterior == $fechaActual && $this->flag) { // Esta bandera permite que al cambiarse el día se empiece desde 1
             
             $this->vecesUsada++;
         } else {
@@ -50,7 +50,7 @@ class TarjetaFranquiciaParcial extends Tarjeta {
         $hora = date('G',$tiempo->obtenerTiempoInt());
         $tiempoActual = $tiempo->obtenerTiempoInt();
 
-        if($diaSemana >= 1 && $diaSemana <= 5 && $hora >= 6 && $hora <= 22 && ($this->tiempoIntAnterior ==  null || ($tiempoActual - $this->tiempoIntAnterior) >= 500)) {
+        if($diaSemana >= 1 && $diaSemana <= 5 && $hora >= 6 && $hora <= 22 && ($this->tiempoIntAnterior ==  null || ($tiempoActual - $this->tiempoIntAnterior) >= 300)) {
             if($this->tiempoIntAnterior ==  null) {
                 $this->tiempoIntAnterior = $tiempoActual;
             }

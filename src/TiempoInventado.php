@@ -4,7 +4,7 @@ namespace TrabajoSube;
 class TiempoInventado {
     private $tiempo;
 
-    public function __construct($anio,$mes,$dia,$hora,$minutos,$segundos) {
+    public function __construct($dia,$mes,$anio,$hora,$minutos,$segundos) {
         $this->tiempo = mktime($hora,$minutos,$segundos,$mes,$dia,$anio);
     }
 
@@ -26,9 +26,9 @@ class TiempoInventado {
     }
     public function obtenerSoloFecha() {
         return [
-            'anio' => date('Y', $this->tiempo),
+            'dia' => date('d', $this->tiempo),
             'mes' => date('m', $this->tiempo),
-            'dia' => date('d', $this->tiempo), 
+            'anio' => date('Y', $this->tiempo), 
         ];
     }
 }

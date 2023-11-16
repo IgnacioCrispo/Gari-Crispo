@@ -9,7 +9,7 @@ class TarjetaTest extends TestCase {
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
         $colectivo = new Colectivo(10);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
 
         $colectivo->pagarCon($tarjeta,$tiempo);
         $colectivo->pagarCon($tarjetaFC,$tiempo);
@@ -96,6 +96,17 @@ class TarjetaTest extends TestCase {
         $this->assertEquals(true, $verificar);
         $verificar = $tarjetaFP->obtenerHabilitadaFP();
         $this->assertEquals(true, $verificar);
+
+        $colectivo->pagarCon($tarjeta,$tiempo);
+        $colectivo->pagarCon($tarjetaFC,$tiempo);
+        $colectivo->pagarCon($tarjetaFP,$tiempo);
+
+        $verificar = $tarjeta->obtenerSaldoAnterior();
+        $this->assertEquals(3815, $verificar);
+        $verificar = $tarjetaFC->obtenerSaldoAnterior();
+        $this->assertEquals(4000, $verificar);
+        $verificar = $tarjetaFP->obtenerSaldoAnterior();
+        $this->assertEquals(3907.5, $verificar);
     }
 
     public function testSumarEstablecer() {
@@ -135,7 +146,7 @@ class TarjetaTest extends TestCase {
     public function testActualizarViajesPlus() {
         $tarjeta = new Tarjeta(0,100);
         $colectivo = new Colectivo(10);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
 
         $this->assertEquals(2,$tarjeta->obtenerViajesPlus());
         $colectivo->pagarCon($tarjeta,$tiempo);
@@ -172,8 +183,10 @@ class TarjetaTest extends TestCase {
 
     public function testCargarTarjeta() {
         $tarjeta = new Tarjeta(0,10);
+        $tarjetaFC = new TarjetaFranquiciaCompleta(0,11,'Estudiantil');
+        $tarjetaFP = new TarjetaFranquiciaCompleta(0,12,'Estudiantil');
         $colectivo = new Colectivo(10);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
 
         $colectivo->pagarCon($tarjeta, $tiempo);
         $this->assertEquals(1,$tarjeta->obtenerViajesPlus());
@@ -202,13 +215,79 @@ class TarjetaTest extends TestCase {
         $this->assertTrue($verificar);
         $this->assertEquals(6600,$tarjeta->obtenerTarjetaSaldo());
         $this->assertEquals(1550,$tarjeta->obtenerTarjetaSaldoExtra());
+
+
+        
+
+
+
+        $colectivo->pagarCon($tarjetaFC, $tiempo);
+        $this->assertEquals(1,$tarjetaFC->obtenerViajesPlus());
+        $verificar = $tarjetaFC->cargarTarjeta(5000);
+        $this->assertFalse($verificar);
+        $this->assertEquals(1,$tarjetaFC->obtenerViajesPlus());
+        $verificar = $tarjetaFC->cargarTarjeta(4000);
+        $this->assertEquals(2,$tarjetaFC->obtenerViajesPlus());
+        
+
+        $tarjetaFC = new TarjetaFranquiciaCompleta(0,11,'Estudiantil');
+        $verificar = $tarjetaFC->cargarTarjeta(100);
+        $this->assertFalse($verificar);
+        $this->assertEquals(0,$tarjetaFC->obtenerTarjetaSaldo());
+
+        $verificar = $tarjetaFC->cargarTarjeta(150);
+        $this->assertTrue($verificar);
+        $this->assertEquals(150,$tarjetaFC->obtenerTarjetaSaldo());
+
+        $verificar = $tarjetaFC->cargarTarjeta(4000);
+        $this->assertTrue($verificar);
+        $this->assertEquals(4150,$tarjetaFC->obtenerTarjetaSaldo());
+
+
+        $verificar = $tarjetaFC->cargarTarjeta(4000);
+        $this->assertTrue($verificar);
+        $this->assertEquals(6600,$tarjetaFC->obtenerTarjetaSaldo());
+        $this->assertEquals(1550,$tarjetaFC->obtenerTarjetaSaldoExtra());
+
+
+
+
+
+
+        $colectivo->pagarCon($tarjetaFP, $tiempo);
+        $this->assertEquals(1,$tarjetaFP->obtenerViajesPlus());
+        $verificar = $tarjetaFP->cargarTarjeta(5000);
+        $this->assertFalse($verificar);
+        $this->assertEquals(1,$tarjetaFP->obtenerViajesPlus());
+        $verificar = $tarjetaFP->cargarTarjeta(4000);
+        $this->assertEquals(2,$tarjetaFP->obtenerViajesPlus());
+        
+
+        $tarjetaFP = new TarjetaFranquiciaParcial(0,11,'Estudiantil');
+        $verificar = $tarjetaFP->cargarTarjeta(100);
+        $this->assertFalse($verificar);
+        $this->assertEquals(0,$tarjetaFP->obtenerTarjetaSaldo());
+
+        $verificar = $tarjetaFP->cargarTarjeta(150);
+        $this->assertTrue($verificar);
+        $this->assertEquals(150,$tarjetaFP->obtenerTarjetaSaldo());
+
+        $verificar = $tarjetaFP->cargarTarjeta(4000);
+        $this->assertTrue($verificar);
+        $this->assertEquals(4150,$tarjetaFP->obtenerTarjetaSaldo());
+
+
+        $verificar = $tarjetaFP->cargarTarjeta(4000);
+        $this->assertTrue($verificar);
+        $this->assertEquals(6600,$tarjetaFP->obtenerTarjetaSaldo());
+        $this->assertEquals(1550,$tarjetaFP->obtenerTarjetaSaldoExtra());
     }
 
     public function testActualizarTarifa(){
         $tarjeta = new Tarjeta(4000,1);
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
         $colectivo = new Colectivo(10);
 
 
@@ -242,7 +321,7 @@ class TarjetaTest extends TestCase {
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,2,'Jubilado');
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
 
         $this->assertEquals(0,$tarjeta->obtenerVecesUsada());
         $this->assertEquals(0,$tarjetaFC->obtenerVecesUsada());
@@ -278,9 +357,30 @@ class TarjetaTest extends TestCase {
         $this->assertEquals(1,$tarjetaFP->obtenerVecesUsada());
     }
 
+    public function testTiempoValidoTrasbordo() {
+        $tarjeta = new Tarjeta(4000,1);
+        $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Estudiantil');
+        $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
+
+        $this->assertTrue($tarjeta->tiempoValidoTrasbordo($tiempo));
+        $this->assertTrue($tarjetaFC->tiempoValidoTrasbordo($tiempo));
+        $this->assertTrue($tarjetaFP->tiempoValidoTrasbordo($tiempo));
+
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
+        $this->assertFalse($tarjeta->tiempoValidoTrasbordo($tiempo));
+        $this->assertFalse($tarjetaFC->tiempoValidoTrasbordo($tiempo));
+        $this->assertFalse($tarjetaFP->tiempoValidoTrasbordo($tiempo));
+
+        $tiempo = new TiempoInventado(12,11,2023,7,0,0); // Mi cumpleaños
+        $this->assertFalse($tarjeta->tiempoValidoTrasbordo($tiempo));
+        $this->assertFalse($tarjetaFC->tiempoValidoTrasbordo($tiempo));
+        $this->assertFalse($tarjetaFP->tiempoValidoTrasbordo($tiempo));
+    }
+
     public function testActualizarHabilitadaTrasbordo() {
         $tarjeta = new Tarjeta(4000,1);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
         $colectivo = new Colectivo(10);
         $colectivo2 = new Colectivo(11);
 
@@ -296,11 +396,18 @@ class TarjetaTest extends TestCase {
         $tiempo->agregarSegundos(3600);
         $colectivo->pagarCon($tarjeta,$tiempo);
         $this->assertFalse($tarjeta->obtenerHabilitadaTrasbordo());
+
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
+        $colectivo->pagarCon($tarjeta,$tiempo);
+        $this->assertFalse($tarjeta->obtenerHabilitadaTrasbordo());
+        $colectivo2->pagarCon($tarjeta,$tiempo);
+        $this->assertFalse($tarjeta->obtenerHabilitadaTrasbordo());
+
     }
 
     public function testActualizarHabilitada() {
         $tarjeta = new Tarjeta(4000,1);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
 
         $tarjeta->actualizarHabilitada($tiempo);
         $this->assertTrue($tarjeta->obtenerHabilitada());
@@ -327,56 +434,63 @@ class TarjetaTest extends TestCase {
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,1,'Jubilado');
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,2,'Estudiantil');
         
-        $tiempo = new TiempoInventado(2023,11,7,5,0,0);
-        $this->assertFalse($tarjetaFC->tiempoValido($tiempo));
+        $tiempo = new TiempoInventado(7,11,2023,5,0,0);
         $this->assertFalse($tarjetaFC->tiempoValido($tiempo));
         
-        $tiempo = new TiempoInventado(2023,11,11,6,0,0);
-        $this->assertFalse($tarjetaFC->tiempoValido($tiempo));
+        $tiempo = new TiempoInventado(11,11,2023,6,0,0);
         $this->assertFalse($tarjetaFC->tiempoValido($tiempo));
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
         $this->assertTrue($tarjetaFC->tiempoValido($tiempo));
-        $this->assertTrue($tarjetaFC->tiempoValido($tiempo));
+
+
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
+        $this->assertTrue($tarjetaFP->tiempoValido($tiempo));
+
+        $tiempo = new TiempoInventado(7,11,2023,5,0,0);
+        $this->assertFalse($tarjetaFP->tiempoValido($tiempo));
+        
+        $tiempo = new TiempoInventado(11,11,2023,6,0,0);
+        $this->assertFalse($tarjetaFP->tiempoValido($tiempo));
     }
 
     public function testHabilitadaFranquicia() {
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,1,'Jubilado');
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,2,'Estudiantil');
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
         $tarjetaFP->actualizarHabilitadaFP($tiempo);
         $this->assertTrue($tarjetaFP->obtenerHabilitadaFP());
         $tarjetaFP->sumarVecesUsada(4);
         $tarjetaFP->actualizarHabilitadaFP($tiempo);
         $this->assertFalse($tarjetaFP->obtenerHabilitadaFP());
 
-        $tiempo = new TiempoInventado(2023,11,7,5,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,5,0,0);
         $tarjetaFP->actualizarHabilitadaFP($tiempo);
         $this->assertFalse($tarjetaFP->obtenerHabilitadaFP());
 
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertTrue($tarjetaFC->obtenerHabilitadaFC());
         $tarjetaFC->sumarVecesUsada(2);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertTrue($tarjetaFC->obtenerHabilitadaFC());
 
-        $tiempo = new TiempoInventado(2023,11,7,5,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,5,0,0);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertFalse($tarjetaFC->obtenerHabilitadaFC());
 
 
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,1,'Estudiantil');
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,6,0,0);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertTrue($tarjetaFC->obtenerHabilitadaFC());
         $tarjetaFC->sumarVecesUsada(2);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertFalse($tarjetaFC->obtenerHabilitadaFC());
 
-        $tiempo = new TiempoInventado(2023,11,7,5,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,5,0,0);
         $tarjetaFC->actualizarHabilitadaFC($tiempo);
         $this->assertFalse($tarjetaFC->obtenerHabilitadaFC());
 
@@ -388,7 +502,7 @@ class TarjetaTest extends TestCase {
         $tarjetaFP = new TarjetaFranquiciaParcial(4000,3,'Estudiantil');
         $colectivo1 = new Colectivo(1);
         $colectivo2 = new Colectivo(2);
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
 
         $this->assertTrue($tarjeta->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjeta->establecerSaldo(-211.84);
@@ -398,7 +512,7 @@ class TarjetaTest extends TestCase {
         $this->assertFalse($tarjeta->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
 
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
         $this->assertTrue($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFC->establecerSaldo(-211.84);
         $this->assertTrue($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
@@ -408,11 +522,11 @@ class TarjetaTest extends TestCase {
         $tarjetaFC->establecerSaldo(-212);
         $this->assertFalse($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFC->establecerSaldo(-211.84);
-        $tiempo = new TiempoInventado(2023,11,7,23,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,23,0,0);
         $this->assertFalse($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
         $tarjetaFC = new TarjetaFranquiciaCompleta(4000,2,'Jubilado');
         $this->assertTrue($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFC->establecerSaldo(-211.84);
@@ -423,10 +537,10 @@ class TarjetaTest extends TestCase {
         $tarjetaFC->establecerSaldo(-212);
         $this->assertFalse($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFC->establecerSaldo(-211.84);
-        $tiempo = new TiempoInventado(2023,11,7,23,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,23,0,0);
         $this->assertFalse($tarjetaFC->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
 
-        $tiempo = new TiempoInventado(2023,11,7,6,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,7,0,0);
         $this->assertTrue($tarjetaFP->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFP->establecerSaldo(-2);
         $this->assertTrue($tarjetaFP->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
@@ -435,8 +549,9 @@ class TarjetaTest extends TestCase {
         $this->assertFalse($tarjetaFP->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
         $tarjetaFP->establecerSaldo(-211.84);
         $this->assertFalse($tarjetaFP->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
-        $tiempo = new TiempoInventado(2023,11,7,23,0,0);
+        $tiempo = new TiempoInventado(7,11,2023,23,0,0);
         $this->assertFalse($tarjetaFP->descargarTarjeta(185,$colectivo1->obtenerLinea(),$tiempo));
     }
 }
+
 ?>

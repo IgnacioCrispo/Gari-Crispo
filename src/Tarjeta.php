@@ -11,6 +11,7 @@ class Tarjeta {
                                 3500, 4000];
     protected $plus = 2;
     private $flag = true;
+    private $flag2 = true;
     protected $vecesUsada = 0;
     private $tarifaModificada = 0;
     protected $habilitada;
@@ -18,6 +19,7 @@ class Tarjeta {
     protected $lineaAnterior;
     protected $tiempoAnterior;
     private $mesAnterior;
+    protected $saldoAnterior;
 
 
     public function __construct($saldoInicial,$IDTarjeta) {
@@ -27,11 +29,14 @@ class Tarjeta {
 
     public function cargarTarjeta($cargarSaldo) { //t
         if(in_array($cargarSaldo,$this->cargasValidas)) {
+            $this->saldoAnterior = $this->saldo;
             $this->saldo += $cargarSaldo;
             $this->actualizarSaldoExtra();
             $this->flag = false;    // Esta bandera es para que si se da el caso en el que al cargar la tarjeta y el saldo siga en negativo, entonces no se van a restar plus
             $this->actualizarViajesPlus();
             $this->flag = true;
+            $this->flag2 = false;
+
 
             return true;
         } else {
@@ -43,6 +48,11 @@ class Tarjeta {
         $this->actualizarHabilitadaTrasbordo($tiempo,$linea);
         $this->tarifaModificada = $this->actualizarTarifa($tarifa,$tiempo);
         $this->actualizarHabilitada($tiempo);
+        if($this->flag2) { // Esta bandera sirve para que si se cargó la tarjeta entonces no se regristre el nuevo saldo en saldoAnterior
+            $this->saldoAnterior = $this->saldo;
+        } else {
+            $this->flag2 = true;
+        }
 
         if($this->habilitadaTrasbordo) {
             $this->saldo -= $this->tarifaModificada;
@@ -65,6 +75,7 @@ class Tarjeta {
         }
     }
 
+
     public function actualizarHabilitada($tiempo) {//t
         if($this->saldo > 0) {
             $this->habilitada = true;
@@ -78,7 +89,7 @@ class Tarjeta {
     public function actualizarHabilitadaTrasbordo($tiempo,$linea) {//t
         if($this->lineaAnterior == null || $this->tiempoAnterior == null) {
             $this->habilitadaTrasbordo = false;
-        } elseif($this->lineaAnterior != $linea && ($tiempo->obtenerTiempoInt() - $this->tiempoAnterior < 3600)) {
+        } elseif($this->lineaAnterior != $linea && ($tiempo->obtenerTiempoInt() - $this->tiempoAnterior < 3600) && $this->tiempoValidoTrasbordo($tiempo)) {
             $this->tarifaModificada = 0;
             $this->habilitadaTrasbordo = true;
         } else {
@@ -129,6 +140,17 @@ class Tarjeta {
         }
     }
 
+    public function tiempoValidoTrasbordo($tiempo) {//t
+        $diaSemana = date('N',$tiempo->obtenerTiempoInt());
+        $hora = date('G',$tiempo->obtenerTiempoInt());
+
+        if($diaSemana >= 1 && $diaSemana <= 6 && $hora >= 7 && $hora <= 22) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
 
@@ -166,6 +188,10 @@ class Tarjeta {
     public function obtenerHabilitada() {//t
         return $this->habilitada;
     }
+    public function obtenerSaldoAnterior() {//t
+        return $this->saldoAnterior;
+    }
+
 
     public function sumarVecesUsada($veces) {
         $this->vecesUsada += $veces;

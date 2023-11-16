@@ -14,7 +14,7 @@ class Colectivo {
     public function pagarCon($tarjeta,$tiempo) {//t
         $pagoHecho = $tarjeta->descargarTarjeta($this->usarTarifa(),$this->linea,$tiempo);
         if($pagoHecho){
-            $boleto = new Boleto($this->linea,$tarjeta->obtenerTarifaModificada(),$tarjeta->obtenerTarjetaID(),$tarjeta->obtenerTarjetaTipo(),$tarjeta->obtenerTarjetaSaldo(),$tiempo);
+            $boleto = new Boleto($this->linea,$tarjeta->obtenerTarifaModificada(),$tarjeta->obtenerTarjetaID(),$tarjeta->obtenerTarjetaTipo(),$tarjeta->obtenerTarjetaSaldo(),$tiempo,$tarjeta->obtenerSaldoAnterior());
             return $boleto;
         } else {
             return false;

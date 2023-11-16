@@ -37,7 +37,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
     public function actualizarVecesUsada($tiempo) {//t
         $fechaActual = $tiempo->obtenerSoloFecha();
 
-        if($this->fechaAnterior == $fechaActual && $this->flag) {
+        if($this->fechaAnterior == $fechaActual  && $this->flag) { // Esta bandera permite que al cambiarse el día se empiece desde 1
             
             $this->vecesUsada++;
         } else {
@@ -57,7 +57,7 @@ class TarjetaFranquiciaCompleta extends Tarjeta {
             return false;
         }
     }
-
+ 
 
     public function obtenerHabilitadaFC() {//t
         return $this->habilitadaFC;
